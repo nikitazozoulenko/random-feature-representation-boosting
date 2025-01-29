@@ -1,0 +1,81 @@
+{
+    "16": {
+        "XGBoostClassifier": {
+            "score_train": [
+                -1.0,
+                -1.0,
+                -1.0,
+                -1.0,
+                -1.0
+            ],
+            "score_test": [
+                -0.9624999761581421,
+                -0.9424999952316284,
+                -0.9775000214576721,
+                -0.9449999928474426,
+                -0.9649999737739563
+            ],
+            "t_fit": [
+                1.444638293236494,
+                9.474867641925812,
+                10.531186949461699,
+                1.8696088343858719,
+                13.738522708415985
+            ],
+            "t_inference": [
+                0.02242865040898323,
+                0.1300545148551464,
+                0.19433683529496193,
+                0.028605934232473373,
+                0.20808357745409012
+            ],
+            "hyperparams": [
+                {
+                    "objective": "binary:logistic",
+                    "num_class": 10,
+                    "alpha": 0.00442607895878117,
+                    "lambda": 0.005081460408396259,
+                    "learning_rate": 0.2511474863382912,
+                    "n_estimators": 193,
+                    "max_depth": 3
+                },
+                {
+                    "objective": "binary:logistic",
+                    "num_class": 10,
+                    "alpha": 0.00026154843742197403,
+                    "lambda": 41.35218790685977,
+                    "learning_rate": 0.4142125449103134,
+                    "n_estimators": 893,
+                    "max_depth": 9
+                },
+                {
+                    "objective": "binary:logistic",
+                    "num_class": 10,
+                    "alpha": 0.0005278704582561132,
+                    "lambda": 33.84010912009696,
+                    "learning_rate": 0.34180155894344905,
+                    "n_estimators": 866,
+                    "max_depth": 9
+                },
+                {
+                    "objective": "binary:logistic",
+                    "num_class": 10,
+                    "alpha": 0.0005112269682030706,
+                    "lambda": 0.062480450433011814,
+                    "learning_rate": 0.2306031082726866,
+                    "n_estimators": 294,
+                    "max_depth": 3
+                },
+                {
+                    "objective": "binary:logistic",
+                    "num_class": 10,
+                    "alpha": 0.004473952401900205,
+                    "lambda": 64.33059920042945,
+                    "learning_rate": 0.45595241540996506,
+                    "n_estimators": 878,
+                    "max_depth": 9
+                }
+            ]
+        }
+    }
+}

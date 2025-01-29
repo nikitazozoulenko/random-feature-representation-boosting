@@ -1,0 +1,81 @@
+{
+    "1489": {
+        "XGBoostClassifier": {
+            "score_train": [
+                -1.0,
+                -1.0,
+                -1.0,
+                -1.0,
+                -1.0
+            ],
+            "score_test": [
+                -0.8980000019073486,
+                -0.9100000262260437,
+                -0.9120000004768372,
+                -0.9010000228881836,
+                -0.9100000262260437
+            ],
+            "t_fit": [
+                5.746357586234808,
+                1.9372947178781033,
+                8.826851781457663,
+                4.013600740581751,
+                5.23051343858242
+            ],
+            "t_inference": [
+                1.3455795124173164,
+                0.33247146382927895,
+                1.0649658292531967,
+                0.5761090219020844,
+                0.9108082391321659
+            ],
+            "hyperparams": [
+                {
+                    "objective": "multi:softmax",
+                    "num_class": 2,
+                    "alpha": 0.0004912745938473761,
+                    "lambda": 0.0016393884614954249,
+                    "learning_rate": 0.042262698284539,
+                    "n_estimators": 875,
+                    "max_depth": 10
+                },
+                {
+                    "objective": "multi:softmax",
+                    "num_class": 2,
+                    "alpha": 0.005622724406493984,
+                    "lambda": 2.1796025578799054,
+                    "learning_rate": 0.06934811740934638,
+                    "n_estimators": 328,
+                    "max_depth": 10
+                },
+                {
+                    "objective": "multi:softmax",
+                    "num_class": 2,
+                    "alpha": 0.00011230984424876665,
+                    "lambda": 12.486903446083009,
+                    "learning_rate": 0.04143999561486586,
+                    "n_estimators": 880,
+                    "max_depth": 10
+                },
+                {
+                    "objective": "multi:softmax",
+                    "num_class": 2,
+                    "alpha": 4.741209921745193e-05,
+                    "lambda": 17.03323768432692,
+                    "learning_rate": 0.35461142518924094,
+                    "n_estimators": 720,
+                    "max_depth": 9
+                },
+                {
+                    "objective": "multi:softmax",
+                    "num_class": 2,
+                    "alpha": 4.1914032848437314e-05,
+                    "lambda": 17.49160500584671,
+                    "learning_rate": 0.15488515564479116,
+                    "n_estimators": 779,
+                    "max_depth": 10
+                }
+            ]
+        }
+    }
+}
