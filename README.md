@@ -1,6 +1,6 @@
 # Random Feature Representation Boosting
 
-This repository contains the code for the paper "Random Feature Representation Boosting". It introduces a novel method for constructing deep residual random feature neural networks using boosting theory.
+This repository contains code from the paper ["Random Feature Representation Boosting"](https://arxiv.org/abs/2501.18283), which intorduces RFRBoost, a novel method for constructing deep residual random feature neural networks using boosting theory.
 
 ## Usage Example: Toy Regression Problem
 
