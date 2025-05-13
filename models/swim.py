@@ -3,8 +3,6 @@ from typing import Tuple, List, Union, Any, Optional, Dict, Literal, Callable, T
 import numpy as np
 import torch
 import torch.nn as nn
-import torch.optim
-import torch.utils.data
 from torch import Tensor
 
 from models.base import FittableModule
@@ -91,7 +89,7 @@ class SWIMLayer(FittableModule):
 
             #define weights and biases
             weights = abs(2*self.c) * dx / (dists**2)
-            biases = -torch.sum(weights * X[idx1], axis=1) - self.c # TODO check sign
+            biases = -torch.sum(weights * X[idx1], axis=1) - self.c
             #biases = -torch.einsum('ij,ij->i', weights, X[idx1]) - self.c
             self.dense.weight.data = weights
             self.dense.bias.data = biases

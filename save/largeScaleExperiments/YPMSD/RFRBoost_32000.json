@@ -1,0 +1,88 @@
+{
+    "model": "RFRBoost",
+    "dataset": "YPMSD",
+    "train_size": 32000,
+    "score": [
+        -0.8522312045097351,
+        -0.8530292510986328,
+        -0.8523809313774109,
+        -0.8517134785652161,
+        -0.8531845808029175
+    ],
+    "fit_time": [
+        0.7449052333831787,
+        0.7462742328643799,
+        0.7464632987976074,
+        0.7473626136779785,
+        0.750011682510376
+    ],
+    "inference_time": [
+        0.025023221969604492,
+        0.02512526512145996,
+        0.02494668960571289,
+        0.025063514709472656,
+        0.025023937225341797
+    ],
+    "best_params": [
+        {
+            "boost_lr": 1.0,
+            "feature_type": "SWIM",
+            "freeze_top_at_t": 11,
+            "in_dim": 90,
+            "l2_ghat": 0.01,
+            "l2_reg": null,
+            "n_layers": 6,
+            "out_dim": 1,
+            "upscale_type": "identity",
+            "use_batchnorm": false
+        },
+        {
+            "boost_lr": 1.0,
+            "feature_type": "SWIM",
+            "freeze_top_at_t": 11,
+            "in_dim": 90,
+            "l2_ghat": 0.001,
+            "l2_reg": null,
+            "n_layers": 6,
+            "out_dim": 1,
+            "upscale_type": "identity",
+            "use_batchnorm": false
+        },
+        {
+            "boost_lr": 1.0,
+            "feature_type": "SWIM",
+            "freeze_top_at_t": 11,
+            "in_dim": 90,
+            "l2_ghat": 0.001,
+            "l2_reg": null,
+            "n_layers": 6,
+            "out_dim": 1,
+            "upscale_type": "identity",
+            "use_batchnorm": false
+        },
+        {
+            "boost_lr": 1.0,
+            "feature_type": "SWIM",
+            "freeze_top_at_t": 11,
+            "in_dim": 90,
+            "l2_ghat": 0.01,
+            "l2_reg": null,
+            "n_layers": 6,
+            "out_dim": 1,
+            "upscale_type": "identity",
+            "use_batchnorm": false
+        },
+        {
+            "boost_lr": 1.0,
+            "feature_type": "SWIM",
+            "freeze_top_at_t": 11,
+            "in_dim": 90,
+            "l2_ghat": 0.01,
+            "l2_reg": null,
+            "n_layers": 6,
+            "out_dim": 1,
+            "upscale_type": "identity",
+            "use_batchnorm": false
+        }
+    ]
+}

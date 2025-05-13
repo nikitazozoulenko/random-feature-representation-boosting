@@ -117,7 +117,7 @@ class BaseGRFRBoost(FittableModule):
         """
         Base class for (Greedy/Gradient) Random Feature Representation Boosting.
         NOTE that we currently store all intermediary classifiers/regressors,
-        for simplicity. We only use the topmost one for prediction.
+        for simplicity. We only use the topmost one for prediction. This is not optimal.
         """
         super(BaseGRFRBoost, self).__init__()
         self.boost_lr = boost_lr
@@ -179,22 +179,21 @@ class BaseGRFRBoost(FittableModule):
         
         Args:
             X (Tensor): Input data shape (N, in_dim)"""
-        with torch.no_grad():
-            #upscale
-            X0 = X
-            X = self.upscale(X0)
-            for randfeat_layer, ghat_layer, batchnorm in zip(self.random_feature_layers, 
-                                                             self.ghat_boosting_layers,
-                                                             self.batchnorms):
-                F = randfeat_layer(X, X0)
-                Ghat = ghat_layer(F)
-                X = X + self.boost_lr * Ghat
-                X = batchnorm(X)
-            # Top level regressor
-            if self.return_features:
-                return X
-            else:
-                return self.top_level_modules[-1](X)
+        #upscale
+        X0 = X
+        X = self.upscale(X0)
+        for randfeat_layer, ghat_layer, batchnorm in zip(self.random_feature_layers, 
+                                                            self.ghat_boosting_layers,
+                                                            self.batchnorms):
+            F = randfeat_layer(X, X0)
+            Ghat = ghat_layer(F)
+            X = X + self.boost_lr * Ghat
+            X = batchnorm(X)
+        # Top level regressor
+        if self.return_features:
+            return X
+        else:
+            return self.top_level_modules[-1](X)
         
 
 
@@ -379,8 +378,8 @@ class GreedyRFRBoostRegressor(BaseGRFRBoost):
                  n_layers: int = 5,
                  randfeat_xt_dim: int = 512,
                  randfeat_x0_dim: int = 512,
-                 l2_reg: float = 0.0001,
-                 l2_ghat: float = 0.0001,
+                 l2_reg: Optional[float] = 0.0001,
+                 l2_ghat: Optional[float] = 0.0001,
                  boost_lr: float = 1.0,
                  sandwich_solver: Literal["dense", "diag", "scalar"] = "dense",
                  feature_type : Literal["iid", "SWIM"] = "SWIM",
@@ -393,13 +392,59 @@ class GreedyRFRBoostRegressor(BaseGRFRBoost):
                  add_features: bool = False,  #add features or concat features
                  ):
         """
-        Tabular Greedy Random Feaute Representation Boosting.
+        Greedy Random Feature Representation Boosting for Regression.
 
+        This model implements a greedy boosting approach where each layer's
+        random features and functional gradient updates are chosen to directly
+        minimize the regularized sandwiched least squares problem.
+
+        If `l2_reg` is `None`, it defaults to the value of `l2_ghat`. Conversely, if
+        `l2_ghat` is `None`, it defaults to `l2_reg`. If both are `None`,
+        regularization is determined by downstream components.
         If 'sandwich_solver' is 'diag' or 'scalar', the arguments
-        'randfeat_xt_dim', 'randfeat_x0_dim', and 'add_features' are ignored 
-        and the feature space is set to 'hidden_dim' with 'add_features==True'
+        'randfeat_xt_dim', 'randfeat_x0_dim', and 'add_features' are effectively
+        overridden: feature space becomes 'hidden_dim' and 'add_features' is set to True.
+        If 'upscale_type' is 'identity', the 'hidden_dim' argument is ignored, and
+        the hidden dimension will be equal to 'in_dim'.
 
-        If 'upscale' is 'identity', the 'hidden_dim' argument is ignored.
+        Args:
+            in_dim (int): Input dimensionality.
+            out_dim (int): Output dimensionality.
+            hidden_dim (int, optional): Dimensionality of the hidden representation
+                after the initial upscale layer. Defaults to 128.
+            n_layers (int, optional): Number of boosting layers. Defaults to 5.
+            randfeat_xt_dim (int, optional): Dimensionality of random features
+                generated from the current representation Xt. Defaults to 512.
+                Ignored if 'sandwich_solver' is not 'dense'.
+            randfeat_x0_dim (int, optional): Dimensionality of random features
+                generated from the initial input X0. Defaults to 512.
+                Ignored if 'sandwich_solver' is not 'dense'.
+            l2_reg (Optional[float], optional): L2 regularization strength for the
+                top-level ridge regressors. Defaults to 0.0001.
+            l2_ghat (Optional[float], optional): L2 regularization strength for the
+                functional gradient (Ghat) estimation. Defaults to 0.0001.
+            boost_lr (float, optional): Learning rate for the boosting updates.
+                Defaults to 1.0.
+            sandwich_solver (Literal["dense", "diag", "scalar"], optional):
+                Solver type for the sandwiched least squares problem in GhatGreedyLayerMSE.
+                Defaults to "dense".
+            feature_type (Literal["iid", "SWIM"], optional): Type of random
+                features to use ('iid' or 'SWIM'). Defaults to "SWIM".
+            upscale_type (Literal["iid", "SWIM", "identity"], optional): Type of
+                initial upscaling layer. Defaults to "iid".
+            use_batchnorm (bool, optional): Whether to use BatchNorm1d after each
+                boosting update. Defaults to True.
+            iid_scale (float, optional): Scaling factor for 'iid' random features.
+                Defaults to 1.0.
+            SWIM_scale (float, optional): Scaling factor 'c' for 'SWIM' random
+                features. Defaults to 0.5.
+            activation (Literal["tanh", "relu"], optional): Activation function
+                to use in random feature layers. Defaults to "tanh".
+            return_features (bool, optional): If True, the forward pass returns
+                the final hidden features instead of predictions. Defaults to False.
+            add_features (bool, optional): If True, random features from Xt and X0
+                are added; otherwise, they are concatenated. Defaults to False.
+                Forced to True if 'sandwich_solver' is not 'dense'.
         """
         self.in_dim = in_dim
         self.out_dim = out_dim
@@ -412,6 +457,12 @@ class GreedyRFRBoostRegressor(BaseGRFRBoost):
         self.boost_lr = boost_lr
         self.feature_type = feature_type
         self.upscale_type = upscale_type
+        
+        #to allow for better cv gridsearch
+        if not l2_reg:
+            l2_reg = l2_ghat
+        elif not l2_ghat:
+            l2_ghat = l2_reg
 
         #activation (needs to be string due to my json code)
         if activation.lower() == "tanh":
@@ -462,8 +513,8 @@ class GradientRFRBoostRegressor(BaseGRFRBoost):
                  n_layers: int = 5,
                  randfeat_xt_dim: int = 512,
                  randfeat_x0_dim: int = 512,
-                 l2_reg: float = 0.0001,
-                 l2_ghat: float = 0.0001,
+                 l2_reg: Optional[float] = 0.0001,
+                 l2_ghat: Optional[float] = 0.0001,
                  boost_lr: float = 1.0,
                  feature_type : Literal["iid", "SWIM"] = "SWIM",
                  upscale_type: Literal["iid", "SWIM", "identity"] = "iid",
@@ -471,9 +522,62 @@ class GradientRFRBoostRegressor(BaseGRFRBoost):
                  iid_scale: float = 1.0,
                  SWIM_scale: float = 0.5,
                  activation: Literal["tanh", "relu"] = "tanh",
+                 freeze_top_at_t: Optional[int] = None,
                  return_features: bool = False,  #logits or features
                  add_features: bool = False,  #add features or concat features
                  ):
+        """
+        Gradient Random Feature Representation Boosting for Regression.
+
+        This model implements a gradient boosting approach where each layer's
+        functional gradient (Ghat) is estimated by fitting random features to the
+        negative gradient of the loss with respect to the current representation.
+        A (closed form) line search is performed to determine the optimal step size for the update.
+
+        If `l2_reg` is `None`, it defaults to the value of `l2_ghat`. Conversely, if
+        `l2_ghat` is `None`, it defaults to `l2_reg`. If both are `None`,
+        regularization is determined by downstream components.
+
+        If 'upscale_type' is 'identity', the 'hidden_dim' argument is ignored, and
+        the hidden dimension will be equal to 'in_dim'.
+
+        Args:
+            in_dim (int): Input dimensionality.
+            out_dim (int): Output dimensionality.
+            hidden_dim (int, optional): Dimensionality of the hidden representation
+                after the initial upscale layer. Defaults to 128.
+            n_layers (int, optional): Number of boosting layers. Defaults to 5.
+            randfeat_xt_dim (int, optional): Dimensionality of random features
+                generated from the current representation Xt. Defaults to 512.
+            randfeat_x0_dim (int, optional): Dimensionality of random features
+                generated from the initial input X0. Defaults to 512.
+            l2_reg (Optional[float], optional): L2 regularization strength for the
+                top-level ridge regressors. Defaults to 0.0001.
+            l2_ghat (Optional[float], optional): L2 regularization strength for the
+                functional gradient (Ghat) estimation. Defaults to 0.0001.
+            boost_lr (float, optional): Learning rate for the boosting updates.
+                Note that GhatGradientLayerMSE performs its own line search, so this
+                acts as an additional scaling factor. Defaults to 1.0.
+            feature_type (Literal["iid", "SWIM"], optional): Type of random
+                features to use ('iid' or 'SWIM'). Defaults to "SWIM".
+            upscale_type (Literal["iid", "SWIM", "identity"], optional): Type of
+                initial upscaling layer. Defaults to "iid".
+            use_batchnorm (bool, optional): Whether to use BatchNorm1d after each
+                boosting update. Defaults to True.
+            iid_scale (float, optional): Scaling factor for 'iid' random features.
+                Defaults to 1.0.
+            SWIM_scale (float, optional): Scaling factor 'c' for 'SWIM' random
+                features. Defaults to 0.5.
+            activation (Literal["tanh", "relu"], optional): Activation function
+                to use in random feature layers. Defaults to "tanh".
+            freeze_top_at_t (Optional[int], optional): If set, the top-level
+                regressor is frozen (not retrained) from layer 'freeze_top_at_t'
+                onwards. Defaults to None (always retrain).
+            return_features (bool, optional): If True, the forward pass returns
+                the final hidden features instead of predictions. Defaults to False.
+            add_features (bool, optional): If True, random features from Xt and X0
+                are added; otherwise, they are concatenated. Defaults to False.
+        """
         self.in_dim = in_dim
         self.out_dim = out_dim
         self.hidden_dim = hidden_dim
@@ -484,6 +588,12 @@ class GradientRFRBoostRegressor(BaseGRFRBoost):
         self.l2_ghat = l2_ghat
         self.feature_type = feature_type
         self.upscale_type = upscale_type
+        
+        #to allow for better cv gridsearch
+        if not l2_reg:
+            l2_reg = l2_ghat
+        elif not l2_ghat:
+            l2_ghat = l2_reg
 
         #activation (needs to be string due to my json code)
         if activation.lower() == "tanh":
@@ -517,7 +627,8 @@ class GradientRFRBoostRegressor(BaseGRFRBoost):
         ]
 
         super(GradientRFRBoostRegressor, self).__init__(
-            upscale, top_level_regs, random_feature_layers, ghat_boosting_layers, boost_lr, use_batchnorm, return_features=return_features
+            upscale, top_level_regs, random_feature_layers, ghat_boosting_layers, 
+            boost_lr, use_batchnorm, return_features=return_features, freeze_top_at_t=freeze_top_at_t,
         )
 
 
@@ -627,8 +738,8 @@ class GradientRFRBoostClassifier(BaseGRFRBoost):
                  n_layers: int = 5,
                  randfeat_xt_dim: int = 512,
                  randfeat_x0_dim: int = 512,
-                 l2_cls: float = 0.0001,
-                 l2_ghat: float = 0.0001,
+                 l2_cls: Optional[float] = 0.0001,
+                 l2_ghat: Optional[float] = 0.0001,
                  boost_lr: float = 1.0,
                  feature_type : Literal["iid", "SWIM"] = "SWIM",
                  upscale_type: Literal["iid", "SWIM", "identity"] = "iid",
@@ -644,6 +755,71 @@ class GradientRFRBoostClassifier(BaseGRFRBoost):
                  return_features: bool = False,  #logits or features
                  add_features: bool = False,  #add features or concat features
                  ):
+        """
+        Gradient Random Feature Representation Boosting for Classification.
+
+        This model implements a gradient boosting approach for classification tasks.
+        Each layer's functional gradient (Ghat) is estimated by fitting random
+        features to the negative gradient of the cross-entropy loss with respect
+        to the current representation. A line search can be performed to determine
+        the optimal step size for the update.
+
+        If `l2_cls` is `None`, it defaults to the value of `l2_ghat`. Conversely, if
+        `l2_ghat` is `None`, it defaults to `l2_cls`. If both are `None`,
+        regularization is determined by downstream components.
+
+        If 'upscale_type' is 'identity', the 'hidden_dim' argument is ignored, and
+        the hidden dimension will be equal to 'in_dim'.
+
+        Args:
+            in_dim (int): Input dimensionality.
+            n_classes (int): Number of target classes. For binary classification,
+                this should be 2.
+            hidden_dim (int, optional): Dimensionality of the hidden representation
+                after the initial upscale layer. Defaults to 128.
+            n_layers (int, optional): Number of boosting layers. Defaults to 5.
+            randfeat_xt_dim (int, optional): Dimensionality of random features
+                generated from the current representation Xt. Defaults to 512.
+            randfeat_x0_dim (int, optional): Dimensionality of random features
+                generated from the initial input X0. Defaults to 512.
+            l2_cls (Optional[float], optional): L2 regularization strength for the
+                top-level logistic regression classifiers. Defaults to 0.0001.
+            l2_ghat (Optional[float], optional): L2 regularization strength for the
+                functional gradient (Ghat) estimation (used if 'ghat_ridge_solver'
+                is 'solve'). Defaults to 0.0001.
+            boost_lr (float, optional): Learning rate for the boosting updates.
+                Note that GhatGradientLayerCrossEntropy can perform its own line
+                search, so this acts as an additional scaling factor. Defaults to 1.0.
+            feature_type (Literal["iid", "SWIM"], optional): Type of random
+                features to use ('iid' or 'SWIM'). Defaults to "SWIM".
+            upscale_type (Literal["iid", "SWIM", "identity"], optional): Type of
+                initial upscaling layer. Defaults to "iid".
+            ghat_ridge_solver (Literal["lbfgs", "solve", "ridgecv"], optional):
+                Solver for the ridge regression problem within Ghat estimation.
+                'lbfgs' is not implemented. 'solve' uses a direct solver with 'l2_ghat'.
+                'ridgecv' uses RidgeCVModule. Defaults to "solve".
+            lbfgs_lr (float, optional): Learning rate for LBFGS optimizer if used
+                in LogisticRegression. Defaults to 1.0.
+            lbfgs_max_iter (int, optional): Maximum iterations for LBFGS optimizer
+                if used in LogisticRegression. Defaults to 300.
+            use_batchnorm (bool, optional): Whether to use BatchNorm1d after each
+                boosting update. Defaults to True.
+            iid_scale (float, optional): Scaling factor for 'iid' random features.
+                Defaults to 1.0.
+            SWIM_scale (float, optional): Scaling factor 'c' for 'SWIM' random
+                features. Defaults to 0.5.
+            activation (Literal["tanh", "relu"], optional): Activation function
+                to use in random feature layers. Defaults to "tanh".
+            do_linesearch (bool, optional): Whether to perform line search for
+                the step size in GhatGradientLayerCrossEntropy. Defaults to True.
+            freeze_top_at_t (Optional[int], optional): If set, the top-level
+                classifier is frozen (not retrained) from layer 'freeze_top_at_t'
+                onwards. Defaults to None (always retrain).
+            return_features (bool, optional): If True, the forward pass returns
+                the final hidden features instead of logits. Defaults to False.
+            add_features (bool, optional): If True, random features from Xt and X0
+                are added; otherwise, they are concatenated. Defaults to False.
+        """
         self.in_dim = in_dim
         self.n_classes = n_classes
         self.hidden_dim = hidden_dim
@@ -654,6 +830,12 @@ class GradientRFRBoostClassifier(BaseGRFRBoost):
         self.l2_ghat = l2_ghat
         self.feature_type = feature_type
         self.upscale_type = upscale_type
+        
+        #to allow for better cv gridsearch
+        if not l2_cls:
+            l2_cls = l2_ghat
+        elif not l2_ghat:
+            l2_ghat = l2_cls
 
         #activation (needs to be string due to my json code)
         if activation.lower() == "tanh":

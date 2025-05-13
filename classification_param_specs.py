@@ -165,7 +165,7 @@ def evaluate_XGBoostClassifier(
         "lambda": trial.suggest_float("lambda", 1e-3, 100.0, log=True),
         "learning_rate": trial.suggest_float("learning_rate", 0.01, 0.5, log=True),
         "n_estimators": trial.suggest_int("n_estimators", 50, 1000, log=True),
-        "max_depth": trial.suggest_int("max_depth", 3, 10),
+        "max_depth": trial.suggest_int("max_depth", 1, 10),
     }
 
     return evaluate_pytorch_model_kfoldcv(
@@ -197,7 +197,7 @@ def evaluate_End2End(
         # Hyperparameters
         "n_blocks": trial.suggest_int("n_blocks", 1, 10),
         "hidden_dim": trial.suggest_int("hidden_dim", 16, 512, log=True),
-        "lr": trial.suggest_float("lr", 1e-7, 1e-2, log=True),
+        "lr": trial.suggest_float("lr", 1e-6, 1e-1, log=True),
         "end_lr_factor": trial.suggest_float("end_lr_factor", 0.01, 1.0, log=True),
         "n_epochs": trial.suggest_int("n_epochs", 10, 50, log=True),
         "weight_decay": trial.suggest_float("weight_decay", 1e-6, 0.001, log=True),
@@ -239,7 +239,7 @@ def parse_args():
     parser.add_argument(
         "--save_dir",
         type=str,
-        default="/home/USERNAME/Code/RFRBoost-sup-mat/save/OpenMLClassification/",
+        default="/home/nikita/Code/random-feature-boosting/save/OpenMLClassification/",
         help="Directory where the results json will be saved to file."
     )
     parser.add_argument(
@@ -272,6 +272,12 @@ def parse_args():
         default=50,
         help="Number of trials before early stopping in Optuna early stopping callback."
     )
+    parser.add_argument(
+        "--max_samples",
+        type=int,
+        default=5000,
+        help="Maximum number of rows per dataset."
+    )
     return parser.parse_args()
 
 
@@ -301,13 +307,14 @@ if __name__ == "__main__":
         # GRFRBoost
         elif "RFRBoost" in model_name:
             upscale_type = "iid" if "upscaleiid" in model_name else "SWIM"
+            feat_type = "iid" if "featiid" in model_name else "SWIM"
             if "ID" in model_name:
                 upscale_type = "identity"
             activation = "relu" if "relu" in model_name else "tanh"
             use_batchnorm = False if "batchnormFalse" in model_name else True
             do_linesearch = False if "linesearchFalse" in model_name else True
             add_features = True if "addfeatures" in model_name else False
-            eval_fun = get_GradientRFRBoost_eval_fun("SWIM", upscale_type, activation, use_batchnorm, do_linesearch, add_features)
+            eval_fun = get_GradientRFRBoost_eval_fun(feat_type, upscale_type, activation, use_batchnorm, do_linesearch, add_features)
         else:
             raise ValueError(f"Model {model_name} not recognized.")
 
@@ -323,4 +330,5 @@ if __name__ == "__main__":
             device = args.device,
             save_dir = args.save_dir,
             early_stopping_patience = args.early_stopping_patience,
+            max_samples=args.max_samples,
         )

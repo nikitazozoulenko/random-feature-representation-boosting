@@ -1,0 +1,73 @@
+{
+    "model": "XGBoost GPU",
+    "dataset": "openml_23517",
+    "train_size": 8000,
+    "score": [
+        0.5077912421007208,
+        0.5189177295926429,
+        0.5193528361606288,
+        0.5167657755363277,
+        0.5207231249904731
+    ],
+    "fit_time": [
+        31.896942377090454,
+        30.28945279121399,
+        28.958403825759888,
+        29.328887224197388,
+        29.726950645446777
+    ],
+    "inference_time": [
+        0.025521516799926758,
+        0.01605510711669922,
+        0.019176483154296875,
+        0.02267146110534668,
+        0.01842498779296875
+    ],
+    "best_params": [
+        {
+            "device": "cuda",
+            "lambda": 1,
+            "learning_rate": 0.01,
+            "max_depth": 10,
+            "n_estimators": 500,
+            "num_class": 1,
+            "objective": "binary:logistic"
+        },
+        {
+            "device": "cuda",
+            "lambda": 1,
+            "learning_rate": 0.01,
+            "max_depth": 1,
+            "n_estimators": 250,
+            "num_class": 1,
+            "objective": "binary:logistic"
+        },
+        {
+            "device": "cuda",
+            "lambda": 1,
+            "learning_rate": 0.033,
+            "max_depth": 1,
+            "n_estimators": 500,
+            "num_class": 1,
+            "objective": "binary:logistic"
+        },
+        {
+            "device": "cuda",
+            "lambda": 1,
+            "learning_rate": 0.1,
+            "max_depth": 1,
+            "n_estimators": 1000,
+            "num_class": 1,
+            "objective": "binary:logistic"
+        },
+        {
+            "device": "cuda",
+            "lambda": 1,
+            "learning_rate": 0.01,
+            "max_depth": 3,
+            "n_estimators": 250,
+            "num_class": 1,
+            "objective": "binary:logistic"
+        }
+    ]
+}

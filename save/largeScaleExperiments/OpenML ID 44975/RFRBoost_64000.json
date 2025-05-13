@@ -1,0 +1,83 @@
+{
+    "model": "RFRBoost",
+    "dataset": "wave_energy_44975",
+    "train_size": 64000,
+    "score": [
+        -0.025354085490107536,
+        -0.025453537702560425,
+        -0.025240052491426468,
+        -0.025291956961154938,
+        -0.02506490796804428
+    ],
+    "fit_time": [
+        1.0811128616333008,
+        1.0803415775299072,
+        1.0800116062164307,
+        1.0827267169952393,
+        1.0831198692321777
+    ],
+    "inference_time": [
+        0.0038695335388183594,
+        0.003896951675415039,
+        0.003888368606567383,
+        0.0039017200469970703,
+        0.0038962364196777344
+    ],
+    "best_params": [
+        {
+            "boost_lr": 1.0,
+            "feature_type": "SWIM",
+            "in_dim": 48,
+            "l2_ghat": 1e-05,
+            "l2_reg": null,
+            "n_layers": 6,
+            "out_dim": 1,
+            "upscale_type": "identity",
+            "use_batchnorm": false
+        },
+        {
+            "boost_lr": 1.0,
+            "feature_type": "SWIM",
+            "in_dim": 48,
+            "l2_ghat": 1e-05,
+            "l2_reg": null,
+            "n_layers": 6,
+            "out_dim": 1,
+            "upscale_type": "identity",
+            "use_batchnorm": false
+        },
+        {
+            "boost_lr": 1.0,
+            "feature_type": "SWIM",
+            "in_dim": 48,
+            "l2_ghat": 1e-05,
+            "l2_reg": null,
+            "n_layers": 6,
+            "out_dim": 1,
+            "upscale_type": "identity",
+            "use_batchnorm": false
+        },
+        {
+            "boost_lr": 1.0,
+            "feature_type": "SWIM",
+            "in_dim": 48,
+            "l2_ghat": 1e-05,
+            "l2_reg": null,
+            "n_layers": 6,
+            "out_dim": 1,
+            "upscale_type": "identity",
+            "use_batchnorm": false
+        },
+        {
+            "boost_lr": 1.0,
+            "feature_type": "SWIM",
+            "in_dim": 48,
+            "l2_ghat": 1e-05,
+            "l2_reg": null,
+            "n_layers": 6,
+            "out_dim": 1,
+            "upscale_type": "identity",
+            "use_batchnorm": false
+        }
+    ]
+}

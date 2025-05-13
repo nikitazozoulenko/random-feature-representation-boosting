@@ -105,30 +105,58 @@ class RidgeCVModule(FittableModule):
     
 
 
+# class RidgeModule(FittableModule):
+#     def __init__(self, l2_reg: float = 1e-3):
+#         super(RidgeModule, self).__init__()
+#         self.l2_reg = l2_reg
+#         self.W = None
+#         self.b = None
+    
+#     def fit(self, X: Tensor, y: Tensor, **kwargs):
+#         """Fit the Ridge model with a fixed l2_reg"""
+#         X_mean = X.mean(dim=0, keepdim=True)
+#         y_mean = y.mean(dim=0, keepdim=True)
+#         X_centered = X - X_mean
+#         y_centered = y - y_mean
+        
+#         N = X.size(0)
+#         A = X_centered.T @ X_centered + self.l2_reg * N * torch.eye(X.size(1), dtype=X.dtype, device=X.device)
+#         B = X_centered.T @ y_centered
+#         self.W = torch.linalg.solve(A, B)
+#         self.b = y_mean - (X_mean @ self.W)
+#         return self
+    
+#     def forward(self, X: Tensor) -> Tensor:
+#         return X @ self.W + self.b
+
 class RidgeModule(FittableModule):
     def __init__(self, l2_reg: float = 1e-3):
         super(RidgeModule, self).__init__()
         self.l2_reg = l2_reg
-        self.W = None
-        self.b = None
+        
     
     def fit(self, X: Tensor, y: Tensor, **kwargs):
-        """Fit the Ridge model with a fixed l2_reg"""
+        """Fit the Ridge model with a fixed l2_reg.
+        Assumes X is of appropriate scale"""
         X_mean = X.mean(dim=0, keepdim=True)
         y_mean = y.mean(dim=0, keepdim=True)
-        X_centered = X - X_mean
-        y_centered = y - y_mean
+        y_std = torch.clamp(y.std(dim=0, keepdim=True), 1e-6)
         
-        N = X.size(0)
-        A = X_centered.T @ X_centered + self.l2_reg * N * torch.eye(X.size(1), dtype=X.dtype, device=X.device)
-        B = X_centered.T @ y_centered
-        self.W = torch.linalg.solve(A, B)
-        self.b = y_mean - (X_mean @ self.W)
+        # Only center X, normalize y
+        X_centered = X - X_mean
+        y_normalized = (y - y_mean) / y_std
+        
+        # Solve the ridge regression
+        N, D = X.shape
+        A = X_centered.T @ X_centered + self.l2_reg * N * torch.eye(D, device=X.device)
+        B = X_centered.T @ y_normalized
+        self.W = nn.Parameter(torch.linalg.solve(A, B) * y_std)
+        self.b = nn.Parameter(y_mean - (X_mean @ self.W))
         return self
-    
+
+
     def forward(self, X: Tensor) -> Tensor:
         return X @ self.W + self.b
-
 
 
 class LogisticRegressionSGD(FittableModule):

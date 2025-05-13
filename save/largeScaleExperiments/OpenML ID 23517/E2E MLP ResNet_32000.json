@@ -1,0 +1,98 @@
+{
+    "model": "E2E MLP ResNet",
+    "dataset": "openml_23517",
+    "train_size": 32000,
+    "score": [
+        0.5259923328830938,
+        0.5282153975869694,
+        0.5221824601555509,
+        0.5097443128315756,
+        0.5238928567545107
+    ],
+    "fit_time": [
+        77.53269410133362,
+        77.40088963508606,
+        77.37748336791992,
+        87.49227166175842,
+        107.04198408126831
+    ],
+    "inference_time": [
+        0.013447284698486328,
+        0.013417959213256836,
+        0.013391971588134766,
+        0.013371706008911133,
+        0.013238668441772461
+    ],
+    "best_params": [
+        {
+            "batch_size": 256,
+            "bottleneck_dim": 512,
+            "end_lr_factor": 0.01,
+            "hidden_dim": 21,
+            "in_dim": 21,
+            "loss": "bce",
+            "lr": 0.1,
+            "n_blocks": 3,
+            "n_epochs": 10,
+            "out_dim": 1,
+            "upsample": false,
+            "weight_decay": 1e-05
+        },
+        {
+            "batch_size": 256,
+            "bottleneck_dim": 512,
+            "end_lr_factor": 0.01,
+            "hidden_dim": 21,
+            "in_dim": 21,
+            "loss": "bce",
+            "lr": 0.1,
+            "n_blocks": 3,
+            "n_epochs": 10,
+            "out_dim": 1,
+            "upsample": false,
+            "weight_decay": 1e-05
+        },
+        {
+            "batch_size": 256,
+            "bottleneck_dim": 512,
+            "end_lr_factor": 0.01,
+            "hidden_dim": 21,
+            "in_dim": 21,
+            "loss": "bce",
+            "lr": 0.01,
+            "n_blocks": 3,
+            "n_epochs": 10,
+            "out_dim": 1,
+            "upsample": false,
+            "weight_decay": 1e-05
+        },
+        {
+            "batch_size": 256,
+            "bottleneck_dim": 512,
+            "end_lr_factor": 0.01,
+            "hidden_dim": 21,
+            "in_dim": 21,
+            "loss": "bce",
+            "lr": 0.01,
+            "n_blocks": 3,
+            "n_epochs": 30,
+            "out_dim": 1,
+            "upsample": false,
+            "weight_decay": 1e-05
+        },
+        {
+            "batch_size": 256,
+            "bottleneck_dim": 512,
+            "end_lr_factor": 0.01,
+            "hidden_dim": 21,
+            "in_dim": 21,
+            "loss": "bce",
+            "lr": 0.1,
+            "n_blocks": 3,
+            "n_epochs": 30,
+            "out_dim": 1,
+            "upsample": false,
+            "weight_decay": 1e-05
+        }
+    ]
+}

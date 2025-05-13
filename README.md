@@ -1,6 +1,6 @@
 # Random Feature Representation Boosting
 
-This repository contains code from the paper ["Random Feature Representation Boosting"](https://arxiv.org/abs/2501.18283), which intorduces RFRBoost, a novel method for constructing deep residual random feature neural networks using boosting theory.
+This repository contains code from the paper [&#34;Random Feature Representation Boosting&#34;](https://arxiv.org/abs/2501.18283), which intorduces RFRBoost, a novel method for constructing deep residual random feature neural networks using boosting theory.
 
 ## Usage Example: Toy Regression Problem
 
@@ -35,8 +35,8 @@ gradient_rfrboost = GradientRFRBoostRegressor(
     boost_lr=0.5,
     feature_type="SWIM",
     upscale_type="identity",
-    l2_reg=0.001,
-    l2_ghat=0.001
+    l2_reg=0.0001,
+    l2_ghat=0.0001
 )
 
 # Train and evaluate
@@ -61,8 +61,8 @@ greedy_rfrboost = GreedyRFRBoostRegressor(
     feature_type="SWIM",
     upscale_type="identity",
     sandwich_solver="dense",
-    l2_reg=0.001,
-    l2_ghat=0.001
+    l2_reg=0.0001,
+    l2_ghat=0.0001
 )
 
 # Train and evaluate
@@ -90,12 +90,12 @@ Output:
 
 ```console
 GradientRFRBoostRegressor:
-  Train RMSE: 0.1736
-  Test RMSE:  0.2599
+  Train RMSE: 0.1701
+  Test RMSE:  0.2466
 
 GreedyRFRBoostRegressor:
-  Train RMSE: 0.1813
-  Test RMSE:  0.2921
+  Train RMSE: 0.1713
+  Test RMSE:  0.2481
 
 Naive (mean) baseline:
   Train RMSE: 1.7043

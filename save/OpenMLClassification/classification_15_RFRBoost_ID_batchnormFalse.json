@@ -16,18 +16,18 @@
                 -0.9856114983558655
             ],
             "t_fit": [
-                0.39350416511297226,
-                0.853024385869503,
-                0.09505090862512589,
-                0.38123782351613045,
-                0.8707351945340633
+                0.49247579276561737,
+                1.1522178873419762,
+                0.14012153446674347,
+                0.5528644397854805,
+                1.4320477470755577
             ],
             "t_inference": [
-                0.01806553453207016,
-                0.044427674263715744,
-                0.004809003323316574,
-                0.01813812553882599,
-                0.04424899071455002
+                0.061885856091976166,
+                0.06070679426193237,
+                0.008334174752235413,
+                0.035805173218250275,
+                0.08656429499387741
             ],
             "hyperparams": [
                 {
@@ -40,6 +40,7 @@
                     "activation": "tanh",
                     "use_batchnorm": false,
                     "do_linesearch": true,
+                    "add_features": false,
                     "n_layers": 4,
                     "hidden_dim": 9,
                     "l2_cls": 9.379885607064914,
@@ -57,6 +58,7 @@
                     "activation": "tanh",
                     "use_batchnorm": false,
                     "do_linesearch": true,
+                    "add_features": false,
                     "n_layers": 10,
                     "hidden_dim": 9,
                     "l2_cls": 0.7680312003799833,
@@ -74,6 +76,7 @@
                     "activation": "tanh",
                     "use_batchnorm": false,
                     "do_linesearch": true,
+                    "add_features": false,
                     "n_layers": 1,
                     "hidden_dim": 9,
                     "l2_cls": 0.04396734240260931,
@@ -91,6 +94,7 @@
                     "activation": "tanh",
                     "use_batchnorm": false,
                     "do_linesearch": true,
+                    "add_features": false,
                     "n_layers": 4,
                     "hidden_dim": 9,
                     "l2_cls": 0.0007417652034871827,
@@ -108,6 +112,7 @@
                     "activation": "tanh",
                     "use_batchnorm": false,
                     "do_linesearch": true,
+                    "add_features": false,
                     "n_layers": 10,
                     "hidden_dim": 9,
                     "l2_cls": 0.46657833062594245,

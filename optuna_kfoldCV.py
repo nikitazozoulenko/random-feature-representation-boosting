@@ -136,12 +136,14 @@ def pytorch_load_openml_dataset(
         dataset_id: int, 
         regression_or_classification: Literal["classification", "regression"],
         device: str = "cpu",
+        max_samples: int = 5000,
+        seed: int = 42,
         ) -> Tuple[Tensor, Tensor]:
     """
     See 'np_load_openml_dataset' for preprocessing details.
     Converts arrays to PyTorch tensors and moves them to the device.
     """
-    X, y = np_load_openml_dataset(dataset_id, regression_or_classification)
+    X, y = np_load_openml_dataset(dataset_id, regression_or_classification, max_samples, seed)
     X = torch.from_numpy(X).to(device)
     y = torch.from_numpy(y).to(device)
     return X, y
@@ -364,7 +366,7 @@ def save_experiments_json(
         experiments: Dict[str, Dict[str, Dict[str, Any]]],
         save_path: str,
         ):
-    os.makedirs(os.path.dirname(save_path), exist_ok=True)
+    os.makedirs(os.path.dirname(str(save_path)), exist_ok=True)
     with open(save_path, 'w') as f:
         json.dump(experiments, f, indent=4)
 
@@ -445,6 +447,7 @@ def run_all_openML_with_model(
         device: Literal["cpu", "cuda"],
         save_dir: str,
         early_stopping_patience: int,
+        max_samples: int = 5000,
         ):
     """Evaluates a model on a list of OpenML datasets.
 
@@ -460,12 +463,14 @@ def run_all_openML_with_model(
         device (str): PyTorch device.
         save_dir (str): Path to the save directory.
         early_stopping_patience (int): Patience for early stopping optimization in Optuna.
+        max_samples (int): Maximum number of samples to use.
     """
     # Fetch and process each dataset
     experiments = {}
     for i, dataset_id in enumerate(dataset_ids):
         dataset_id = str(dataset_id)
-        X, y = pytorch_load_openml_dataset(dataset_id, regression_or_classification)
+        X, y = pytorch_load_openml_dataset(dataset_id, regression_or_classification, device, max_samples)
+        print("X shape", X.shape)
         
         json = evaluate_dataset_with_model(
             X, y, dataset_id, evaluate_model_func, name_model, k_folds, cv_seed, 

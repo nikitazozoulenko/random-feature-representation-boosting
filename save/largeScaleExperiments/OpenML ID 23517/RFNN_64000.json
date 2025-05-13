@@ -1,0 +1,73 @@
+{
+    "model": "RFNN",
+    "dataset": "openml_23517",
+    "train_size": 64000,
+    "score": [
+        0.5267779568702703,
+        0.5273024363282801,
+        0.5253230922593708,
+        0.5277223972468903,
+        0.5261899443635809
+    ],
+    "fit_time": [
+        1.8992502689361572,
+        1.6306934356689453,
+        1.9930095672607422,
+        1.715512752532959,
+        1.6690936088562012
+    ],
+    "inference_time": [
+        0.00992894172668457,
+        0.00990605354309082,
+        0.010011672973632812,
+        0.009961605072021484,
+        0.009900331497192383
+    ],
+    "best_params": [
+        {
+            "hidden_dim": 512,
+            "in_dim": 21,
+            "l2_cls": 0.0001,
+            "n_classes": 1,
+            "n_layers": 0,
+            "upscale_type": "SWIM",
+            "use_batchnorm": false
+        },
+        {
+            "hidden_dim": 512,
+            "in_dim": 21,
+            "l2_cls": 0.001,
+            "n_classes": 1,
+            "n_layers": 0,
+            "upscale_type": "SWIM",
+            "use_batchnorm": false
+        },
+        {
+            "hidden_dim": 512,
+            "in_dim": 21,
+            "l2_cls": 1e-05,
+            "n_classes": 1,
+            "n_layers": 0,
+            "upscale_type": "SWIM",
+            "use_batchnorm": false
+        },
+        {
+            "hidden_dim": 512,
+            "in_dim": 21,
+            "l2_cls": 0.001,
+            "n_classes": 1,
+            "n_layers": 0,
+            "upscale_type": "SWIM",
+            "use_batchnorm": false
+        },
+        {
+            "hidden_dim": 512,
+            "in_dim": 21,
+            "l2_cls": 0.01,
+            "n_classes": 1,
+            "n_layers": 0,
+            "upscale_type": "SWIM",
+            "use_batchnorm": false
+        }
+    ]
+}

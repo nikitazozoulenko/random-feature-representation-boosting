@@ -1,0 +1,68 @@
+{
+    "model": "XGBoost GPU",
+    "dataset": "wave_energy_44975",
+    "train_size": 2000,
+    "score": [
+        -0.15749448537826538,
+        -0.1611005812883377,
+        -0.160183846950531,
+        -0.1581951379776001,
+        -0.14937250316143036
+    ],
+    "fit_time": [
+        36.22274589538574,
+        35.234358072280884,
+        36.015037536621094,
+        35.83444619178772,
+        36.22482204437256
+    ],
+    "inference_time": [
+        0.012090921401977539,
+        0.01287698745727539,
+        0.012866735458374023,
+        0.012271881103515625,
+        0.012451410293579102
+    ],
+    "best_params": [
+        {
+            "device": "cuda",
+            "lambda": 1,
+            "learning_rate": 0.1,
+            "max_depth": 1,
+            "n_estimators": 1000,
+            "objective": "reg:squarederror"
+        },
+        {
+            "device": "cuda",
+            "lambda": 1,
+            "learning_rate": 0.1,
+            "max_depth": 1,
+            "n_estimators": 1000,
+            "objective": "reg:squarederror"
+        },
+        {
+            "device": "cuda",
+            "lambda": 1,
+            "learning_rate": 0.1,
+            "max_depth": 1,
+            "n_estimators": 1000,
+            "objective": "reg:squarederror"
+        },
+        {
+            "device": "cuda",
+            "lambda": 1,
+            "learning_rate": 0.1,
+            "max_depth": 1,
+            "n_estimators": 1000,
+            "objective": "reg:squarederror"
+        },
+        {
+            "device": "cuda",
+            "lambda": 1,
+            "learning_rate": 0.1,
+            "max_depth": 1,
+            "n_estimators": 1000,
+            "objective": "reg:squarederror"
+        }
+    ]
+}

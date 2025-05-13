@@ -1,0 +1,73 @@
+{
+    "model": "RFNN",
+    "dataset": "YPMSD",
+    "train_size": 256000,
+    "score": [
+        -0.8534573912620544,
+        -0.8520849347114563,
+        -0.8558123707771301,
+        -0.8530197739601135,
+        -0.8557532429695129
+    ],
+    "fit_time": [
+        0.15422344207763672,
+        0.15281128883361816,
+        0.15114808082580566,
+        0.15100383758544922,
+        0.1516411304473877
+    ],
+    "inference_time": [
+        0.0012943744659423828,
+        0.0012950897216796875,
+        0.0012559890747070312,
+        0.0012578964233398438,
+        0.0012471675872802734
+    ],
+    "best_params": [
+        {
+            "hidden_dim": 512,
+            "in_dim": 90,
+            "l2_reg": 1e-05,
+            "n_layers": 0,
+            "out_dim": 1,
+            "upscale_type": "SWIM",
+            "use_batchnorm": false
+        },
+        {
+            "hidden_dim": 512,
+            "in_dim": 90,
+            "l2_reg": 1e-05,
+            "n_layers": 0,
+            "out_dim": 1,
+            "upscale_type": "SWIM",
+            "use_batchnorm": false
+        },
+        {
+            "hidden_dim": 512,
+            "in_dim": 90,
+            "l2_reg": 1e-05,
+            "n_layers": 0,
+            "out_dim": 1,
+            "upscale_type": "SWIM",
+            "use_batchnorm": false
+        },
+        {
+            "hidden_dim": 512,
+            "in_dim": 90,
+            "l2_reg": 1e-05,
+            "n_layers": 0,
+            "out_dim": 1,
+            "upscale_type": "SWIM",
+            "use_batchnorm": false
+        },
+        {
+            "hidden_dim": 512,
+            "in_dim": 90,
+            "l2_reg": 1e-05,
+            "n_layers": 0,
+            "out_dim": 1,
+            "upscale_type": "SWIM",
+            "use_batchnorm": false
+        }
+    ]
+}
